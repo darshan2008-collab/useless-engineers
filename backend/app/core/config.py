@@ -63,6 +63,7 @@ class SimulationConfig(BaseModel):
         },
         description="Fractions of observations affected by various noise types"
     )
+    preset: str = Field(default="urban_mesh", description="Hardware simulation profile: urban_mesh, vessel_marine, industrial_stress, edge_mesh")
 
 
 class PhysicalBoundsConfig(BaseModel):

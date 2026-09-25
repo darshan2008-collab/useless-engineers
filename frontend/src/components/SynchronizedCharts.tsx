@@ -252,18 +252,42 @@ export const SynchronizedCharts: React.FC<SynchronizedChartsProps> = ({
     }
   };
 
+  // Mobile Touch Support: Allows scrubbing and tapping points on phones
+  const handleTouch = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (!e.touches || e.touches.length === 0) return;
+    const touch = e.touches[0];
+    const canvas = e.currentTarget;
+    const rect = canvas.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    const paddingLeft = 45;
+    const paddingRight = 15;
+    const plotW = canvas.width - paddingLeft - paddingRight;
+
+    const relativeX = (x - paddingLeft) / plotW;
+    const index = Math.round(relativeX * (points.length - 1));
+
+    if (index >= 0 && index < points.length) {
+      setHoverIndex(index);
+      onSelectPoint(points[index]);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    // Keep the selected index active
+  };
+
   return (
-    <div className="card" style={{ padding: 18 }}>
-      <div className="card-header" style={{ marginBottom: 12 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+    <div className="card charts-container-card">
+      <div className="card-header chart-main-header">
+        <div className="chart-header-left">
           <div className="card-title">
-            <span>Synchronized Signal Denoising Inspection</span>
+            <span>Signal Denoising Inspection</span>
           </div>
-          <span style={{ fontSize: 12, color: "#64748b" }}>
+          <span className="chart-header-meta">
             Sensor: <strong>{selectedSensorId}</strong> • Feature: <strong style={{ textTransform: "capitalize" }}>{targetFeature}</strong>
           </span>
         </div>
-        <div style={{ fontSize: 12, color: "#64748b" }}>
+        <div className="chart-header-right">
           Unified Scale: <code className="code-block" style={{ padding: "2px 6px" }}>[{minVal.toFixed(1)}, {maxVal.toFixed(1)}]</code>
         </div>
       </div>
@@ -286,10 +310,13 @@ export const SynchronizedCharts: React.FC<SynchronizedChartsProps> = ({
               ref={beforeCanvasRef}
               width={660}
               height={320}
-              style={{ width: "100%", height: "100%", cursor: "crosshair" }}
+              style={{ width: "100%", height: "100%", cursor: "crosshair", touchAction: "pan-y" }}
               onMouseMove={handleMouseMove}
               onMouseLeave={() => setHoverIndex(null)}
               onClick={handleClick}
+              onTouchStart={handleTouch}
+              onTouchMove={handleTouch}
+              onTouchEnd={handleTouchEnd}
             />
           </div>
         </div>
@@ -311,10 +338,13 @@ export const SynchronizedCharts: React.FC<SynchronizedChartsProps> = ({
               ref={afterCanvasRef}
               width={660}
               height={320}
-              style={{ width: "100%", height: "100%", cursor: "crosshair" }}
+              style={{ width: "100%", height: "100%", cursor: "crosshair", touchAction: "pan-y" }}
               onMouseMove={handleMouseMove}
               onMouseLeave={() => setHoverIndex(null)}
               onClick={handleClick}
+              onTouchStart={handleTouch}
+              onTouchMove={handleTouch}
+              onTouchEnd={handleTouchEnd}
             />
           </div>
         </div>

@@ -29,33 +29,34 @@ export const QuantumDrawer: React.FC<QuantumDrawerProps> = ({ quantumMeta }) => 
   };
 
   return (
-    <div className="card" style={{ padding: 18, border: "1px solid #ddd6fe", background: "#fbfaff" }}>
+    <div className="card quantum-card" style={{ padding: 18, border: "1px solid #ddd6fe", background: "#fbfaff" }}>
       <div
-        style={{ display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer" }}
+        className="quantum-card-header"
+        style={{ display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer", flexWrap: "wrap", gap: 10 }}
         onClick={() => setIsOpen(!isOpen)}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ background: "#8b5cf6", color: "#ffffff", padding: "6px 8px", borderRadius: 6 }}>
+          <div style={{ background: "#8b5cf6", color: "#ffffff", padding: "6px 8px", borderRadius: 6, flexShrink: 0 }}>
             <CpuIcon size={16} />
           </div>
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, color: "#4c1d95" }}>
-              Variational Quantum Circuit Architecture & Parameters (Section 50)
+              Variational Quantum Circuit Architecture
             </div>
             <div style={{ fontSize: 11, color: "#6d28d9" }}>
-              Parameterized Qiskit Circuit • Angle Encoding • Linear CNOT Topology • Observable: &lt;Z₀&gt;
+              4 Qubits • Angle Encoding • Linear CNOT • &lt;Z₀&gt; Observable
             </div>
           </div>
         </div>
 
         <button className="btn btn-outline btn-sm" style={{ borderColor: "#c4b5fd", color: "#5b21b6" }}>
-          {isOpen ? "Hide Circuit Details ▲" : "Inspect Quantum Engine ▼"}
+          {isOpen ? "Hide Details ▲" : "Inspect VQC ▼"}
         </button>
       </div>
 
       {isOpen && (
         <div style={{ marginTop: 16, borderTop: "1px solid #ede9fe", paddingTop: 14 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 16 }}>
+          <div className="quantum-meta-grid" style={{ display: "grid", gap: 12, marginBottom: 16 }}>
             <div style={{ background: "#ffffff", padding: 12, borderRadius: 8, border: "1px solid #e9d5ff" }}>
               <div style={{ fontSize: 11, color: "#6b21a8", fontWeight: 600 }}>QUBITS</div>
               <div style={{ fontSize: 18, fontWeight: 700, color: "#581c87", fontFamily: "var(--font-mono)" }}>

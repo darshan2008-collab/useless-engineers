@@ -196,3 +196,110 @@ export function RadioWaveIcon({ size = 16, className = "" }: { size?: number; cl
   );
 }
 
+export function QSenseEmblem({ size = 18, className = "" }: { size?: number; className?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <defs>
+        <linearGradient id="qSenseOrbGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#ffffff" />
+          <stop offset="45%" stopColor="#e0f2fe" />
+          <stop offset="100%" stopColor="#38bdf8" />
+        </linearGradient>
+        <linearGradient id="qSenseRingGrad" x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#ffffff" />
+          <stop offset="60%" stopColor="#93c5fd" />
+          <stop offset="100%" stopColor="#38bdf8" />
+        </linearGradient>
+        <linearGradient id="qSenseTailGrad" x1="14" y1="14" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#ffffff" />
+          <stop offset="100%" stopColor="#38bdf8" />
+        </linearGradient>
+      </defs>
+
+      {/* Main Quantum Orbital "Q" Loop */}
+      <circle
+        cx="11.5"
+        cy="11.5"
+        r="7.8"
+        stroke="url(#qSenseRingGrad)"
+        strokeWidth="2.1"
+        strokeLinecap="round"
+      />
+
+      {/* Crossed Quantum Orbital Resonance Ring */}
+      <ellipse
+        cx="11.5"
+        cy="11.5"
+        rx="8"
+        ry="3.6"
+        transform="rotate(-40 11.5 11.5)"
+        stroke="url(#qSenseOrbGrad)"
+        strokeWidth="1.4"
+        strokeOpacity="0.85"
+      />
+
+      {/* Dynamic Telemetry Sensor Beam (Q-tail) */}
+      <path
+        d="M 14.5 14.5 L 21 21"
+        stroke="url(#qSenseTailGrad)"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+      />
+
+      {/* Sensor Signal Pulse Point */}
+      <circle cx="21" cy="21" r="1.1" fill="#ffffff" />
+
+      {/* Central Quantum Qubit Core */}
+      <circle cx="11.5" cy="11.5" r="2.2" fill="#ffffff" />
+      <circle cx="11.5" cy="11.5" r="1.1" fill="#1e40af" />
+    </svg>
+  );
+}
+
+export function UserIcon({ size = 16, className = "" }: { size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  );
+}
+
+export function LockIcon({ size = 16, className = "" }: { size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+    </svg>
+  );
+}
+
+export function EyeIcon({ size = 16, className = "" }: { size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  );
+}
+
+export function EyeOffIcon({ size = 16, className = "" }: { size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+      <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+      <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
+      <line x1="2" y1="2" x2="22" y2="22" />
+    </svg>
+  );
+}
+
+
+

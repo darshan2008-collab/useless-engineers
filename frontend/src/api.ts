@@ -48,6 +48,18 @@ export function getDownloadSimulationUrl(fileType: "noisy" | "ground_truth" | "l
   return `${API_BASE}/simulation/download/${fileType}`;
 }
 
+export async function generateVesselSimulation(): Promise<ApiResponse<any>> {
+  const res = await fetch(`${API_BASE}/simulation/vessel-preset`, {
+    method: "POST",
+  });
+  return res.json();
+}
+
+export async function getHardwareStatus(): Promise<ApiResponse<any>> {
+  const res = await fetch(`${API_BASE}/simulation/hardware-status`);
+  return res.json();
+}
+
 export async function startProcessingRun(datasetId: string, feature: string = "temperature"): Promise<ApiResponse<any>> {
   const res = await fetch(`${API_BASE}/processing/run`, {
     method: "POST",

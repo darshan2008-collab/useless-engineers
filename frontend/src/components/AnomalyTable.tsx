@@ -24,12 +24,12 @@ export const AnomalyTable: React.FC<AnomalyTableProps> = ({
 
   return (
     <div className="card" style={{ padding: 18 }}>
-      <div className="card-header">
+      <div className="card-header anomaly-card-header">
         <div className="card-title">
           <AlertTriangleIcon size={16} />
-          <span>Detected Anomalies & Provenance Log ({filtered.length})</span>
+          <span>Detected Anomalies ({filtered.length})</span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
           <label style={{ fontSize: 12, color: "#64748b" }}>Filter Type:</label>
           <select
             value={filterType}
@@ -50,6 +50,10 @@ export const AnomalyTable: React.FC<AnomalyTableProps> = ({
             ))}
           </select>
         </div>
+      </div>
+
+      <div className="mobile-table-hint show-on-mobile" style={{ fontSize: 11, color: "#64748b", marginBottom: 6 }}>
+        👆 Swipe horizontally to inspect classical & quantum provenance
       </div>
 
       <div className="table-container" style={{ maxHeight: 360, overflowY: "auto" }}>

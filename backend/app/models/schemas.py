@@ -34,6 +34,8 @@ class SimulationRequest(BaseModel):
     sampling_interval_minutes: int = 5
     random_seed: int = 42
     noise_fractions: Optional[Dict[str, float]] = None
+    preset: Optional[str] = "urban_mesh"
+    hardware_simulation: Optional[bool] = True
 
 
 class ProcessingRunConfig(BaseModel):

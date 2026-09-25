@@ -1,5 +1,5 @@
 import React from "react";
-import { CpuIcon, PlayIcon, UploadIcon, BarChartIcon, RefreshCwIcon, MenuIcon } from "./Icons";
+import { CpuIcon, PlayIcon, UploadIcon, BarChartIcon, RefreshCwIcon, MenuIcon, QSenseEmblem, UserIcon } from "./Icons";
 import type { DashboardView } from "./Sidebar";
 
 interface HeaderProps {
@@ -13,6 +13,7 @@ interface HeaderProps {
   hasRun: boolean;
   activeView: DashboardView;
   onSelectView: (view: DashboardView) => void;
+  currentUser?: string | null;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -26,6 +27,7 @@ export const Header: React.FC<HeaderProps> = ({
   hasRun,
   activeView,
   onSelectView,
+  currentUser,
 }) => {
   const tabs: Array<{ id: DashboardView; label: string }> = [
     { id: "all", label: "Overview" },
@@ -56,9 +58,19 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </button>
 
-          <div className="logo-badge">
-            <CpuIcon size={18} />
-            <span>Q-SENSE</span>
+          <div
+            className="logo-badge"
+            onClick={() => onSelectView("all")}
+            title="Q-SENSE • Quantum IoT Telemetry Engine"
+          >
+            <div className="logo-icon-tile">
+              <QSenseEmblem size={17} />
+            </div>
+            <span className="logo-text">
+              <span className="logo-text-q">Q</span>
+              <span className="logo-text-hyphen">-</span>
+              <span className="logo-text-sense">SENSE</span>
+            </span>
           </div>
         </div>
 
@@ -70,7 +82,7 @@ export const Header: React.FC<HeaderProps> = ({
               className={`header-tab-btn ${activeView === tab.id ? "active" : ""}`}
               onClick={() => onSelectView(tab.id)}
             >
-              {tab.label}
+              <span className="tab-label">{tab.label}</span>
             </button>
           ))}
         </div>
@@ -80,42 +92,52 @@ export const Header: React.FC<HeaderProps> = ({
           {activeDatasetName && (
             <div className="dataset-indicator" title={`Active: ${activeDatasetName}`}>
               <span className="live-dot"></span>
-              <span className="dataset-label">
-                {activeDatasetName.length > 24 ? activeDatasetName.slice(0, 22) + "..." : activeDatasetName}
+              <span className="dataset-label hide-on-mobile">
+                {activeDatasetName.split(" ")[0]}
               </span>
             </div>
           )}
 
           <button
-            className="btn-pan-upload"
+            className="btn-pan-upload hide-on-mobile"
             onClick={onOpenUpload}
             disabled={isLoading}
             title="Upload raw sensor CSV"
           >
-            <UploadIcon size={14} />
+            <UploadIcon size={13} />
             <span>Upload CSV</span>
           </button>
 
           <button
-            className="btn btn-primary"
+            className="btn btn-primary header-btn-demo"
             onClick={onRunDemo}
             disabled={isLoading}
             title="Execute Official 50-sensor 24h Demo Pipeline (Seed 42)"
           >
-            {isLoading ? <RefreshCwIcon size={14} className="spin" /> : <PlayIcon size={14} />}
-            <span>{isLoading ? "Processing..." : "Run Official Demo"}</span>
+            {isLoading ? <RefreshCwIcon size={13} className="spin" /> : <PlayIcon size={13} />}
+            <span className="demo-btn-text-desktop hide-on-mobile">{isLoading ? "Processing..." : "Run Demo"}</span>
+            <span className="demo-btn-text-mobile show-on-mobile">{isLoading ? "..." : "Demo"}</span>
           </button>
 
           {hasRun && (
             <button
-              className="btn btn-outline"
+              className="btn btn-outline hide-on-mobile"
               onClick={onOpenBenchmark}
               title="Open Scientific Benchmark Comparison"
             >
-              <BarChartIcon size={14} />
+              <BarChartIcon size={13} />
               <span>Benchmark</span>
             </button>
           )}
+
+          <button
+            className={`btn-user-pill header-btn-user ${activeView === "login" ? "active" : ""}`}
+            onClick={() => onSelectView(activeView === "login" ? "all" : "login")}
+            title="Q-SENSE Security Access Portal"
+          >
+            <UserIcon size={13} />
+            <span className="user-pill-text">{currentUser ? (currentUser.length > 10 ? currentUser.slice(0, 8) + ".." : currentUser) : "Login"}</span>
+          </button>
         </div>
       </div>
     </header>

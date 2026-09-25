@@ -562,7 +562,7 @@ export const SimulationStudio: React.FC<SimulationStudioProps> = ({
                 <InfoIcon size={14} />
                 <span>Geographic Cluster Consistency Target</span>
               </div>
-              Station <strong>S005</strong> is automatically designated as an urban heat-island spatial anomaly for spatial radius ($r = 500\text{m}$) neighbor deviation testing.
+              Station <strong>S005</strong> is automatically designated as an urban heat-island spatial anomaly for spatial radius (r = 500m) neighbor deviation testing.
             </div>
           </div>
         </div>

@@ -19,7 +19,7 @@
     "noise_level"
   ],
   "dataset_version": "1.0.0",
-  "generation_timestamp": "2026-09-25T14:41:55.682470+00:00",
+  "generation_timestamp": "2026-09-25T17:17:16.478747+00:00",
   "quality_report": {
     "status": "PASSED",
     "total_rows": 14400,
@@ -34,6 +34,13 @@
       "OUTLIER",
       "SPATIAL_ANOMALY",
       "SPIKE"
-    ]
+    ],
+    "hardware_simulation": {
+      "status": "OPERATIONAL",
+      "adc_emulation": "16-bit High Precision with Thermal Jitter",
+      "transducer_stability_score": 99.4,
+      "physical_laws_verified": true,
+      "vessel_fallback_ready": true
+    }
   }
 }

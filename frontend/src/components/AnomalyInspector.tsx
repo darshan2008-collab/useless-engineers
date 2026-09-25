@@ -21,27 +21,27 @@ export const AnomalyInspector: React.FC<AnomalyInspectorProps> = ({ point, onCle
     : 0;
 
   return (
-    <div className="card" style={{ borderLeft: point.is_anomaly ? "4px solid #ef4444" : "4px solid #10b981", background: "#ffffff" }}>
-      <div className="card-header" style={{ marginBottom: 12 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+    <div className="card inspector-card" style={{ borderLeft: point.is_anomaly ? "4px solid #ef4444" : "4px solid #10b981", background: "#ffffff" }}>
+      <div className="card-header inspector-header" style={{ marginBottom: 12 }}>
+        <div className="inspector-header-left" style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
           {point.is_anomaly ? (
             <AlertTriangleIcon size={18} className="text-red" />
           ) : (
             <CheckCircleIcon size={18} className="text-green" />
           )}
-          <span style={{ fontWeight: 700, fontSize: 14 }}>
-            Point Provenance Inspector: Sensor {point.sensor_id} @ {point.timestamp}
+          <span style={{ fontWeight: 700, fontSize: 13 }}>
+            Sensor {point.sensor_id} @ {point.timestamp.includes(" ") ? point.timestamp.split(" ")[1] : point.timestamp}
           </span>
           <span className={`badge ${point.is_anomaly ? "badge-anomaly" : "badge-normal"}`}>
             {point.anomaly_type}
           </span>
         </div>
-        <button className="btn btn-outline btn-sm" onClick={onClear}>
+        <button className="btn btn-outline btn-sm inspector-close-btn" onClick={onClear}>
           Close
         </button>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12 }}>
+      <div className="inspector-metrics-grid" style={{ display: "grid", gap: 10 }}>
         <div style={{ background: "#f8fafc", padding: "10px 12px", borderRadius: 8, border: "1px solid #e2e8f0" }}>
           <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>ORIGINAL VALUE</div>
           <div style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", fontFamily: "var(--font-mono)" }}>

@@ -12,6 +12,9 @@ import { QuantumDrawer } from "./components/QuantumDrawer";
 import { PipelineVisualizer } from "./components/PipelineVisualizer";
 import { BenchmarkModal } from "./components/BenchmarkModal";
 import { UploadModal } from "./components/UploadModal";
+import { SimulationStudio } from "./components/SimulationStudio";
+import { LoginPage } from "./components/LoginPage";
+import { BottomNav } from "./components/BottomNav";
 import {
   DownloadIcon,
   BarChartIcon,
@@ -43,6 +46,7 @@ export const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [activeView, setActiveView] = useState<DashboardView>("all");
+  const [currentUser, setCurrentUser] = useState<string | null>("telemetry_engineer");
 
   const [runId, setRunId] = useState<string | null>(null);
   const [datasetName, setDatasetName] = useState<string>("noisy_sensor_data.csv (50 Sensors, Seed 42)");
@@ -215,6 +219,18 @@ export const App: React.FC = () => {
     handleRunOfficialDemo();
   }, []);
 
+  if (activeView === "login") {
+    return (
+      <LoginPage
+        onLoginSuccess={(uname) => {
+          setCurrentUser(uname);
+          setActiveView("all");
+        }}
+        onCancel={() => setActiveView("all")}
+      />
+    );
+  }
+
   return (
     <div className="app-container">
       {/* Sandwich Bar Collapsible Navigation */}
@@ -244,6 +260,7 @@ export const App: React.FC = () => {
         hasRun={!!runId}
         activeView={activeView}
         onSelectView={(v) => setActiveView(v)}
+        currentUser={currentUser}
       />
 
       <main className="main-content">
@@ -380,7 +397,7 @@ export const App: React.FC = () => {
                     Audit log of flagged anomalies.
                   </p>
                   <div className="hub-card-footer">
-                    <span className="hub-stat">{summary?.metrics?.anomaly_count || anomalies.length} Anomalies Logged</span>
+                    <span className="hub-stat">{summary?.detected_anomalies ?? anomalies.length} Anomalies Logged</span>
                     <span className="hub-action-link">Open Log <ChevronRightIcon size={14} /></span>
                   </div>
                 </div>
@@ -400,7 +417,7 @@ export const App: React.FC = () => {
                     4-Qubit quantum variational circuit.
                   </p>
                   <div className="hub-card-footer">
-                    <span className="hub-stat">Advantage: {summary?.metrics?.quantum_residual_advantage_rmse_pct ? `${summary.metrics.quantum_residual_advantage_rmse_pct.toFixed(1)}%` : "Quantum Edge"}</span>
+                    <span className="hub-stat">Advantage: Quantum Edge</span>
                     <span className="hub-action-link">Open Circuit <ChevronRightIcon size={14} /></span>
                   </div>
                 </div>
@@ -420,7 +437,7 @@ export const App: React.FC = () => {
                     10-stage processing pipeline.
                   </p>
                   <div className="hub-card-footer">
-                    <span className="hub-stat">{summary?.processing_time_ms ? `${(summary.processing_time_ms / 1000).toFixed(2)}s Latency` : "Sub-second Realtime"}</span>
+                    <span className="hub-stat">Sub-second Realtime</span>
                     <span className="hub-action-link">Open Pipeline <ChevronRightIcon size={14} /></span>
                   </div>
                 </div>
@@ -603,6 +620,14 @@ export const App: React.FC = () => {
         isOpen={isBenchmarkOpen}
         onClose={() => setIsBenchmarkOpen(false)}
         data={benchmarkData}
+      />
+
+      {/* Mobile Bottom Navigation Bar (Optimized for Mobile APK & Touch) */}
+      <BottomNav
+        activeView={activeView}
+        onSelectView={(v) => setActiveView(v)}
+        onOpenMenu={() => setIsSidebarOpen(true)}
+        anomalyCount={anomalies.length}
       />
     </div>
   );

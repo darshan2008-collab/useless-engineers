@@ -8,21 +8,30 @@ def generate_sensor_network(
     num_sensors: int = 50,
     center_lat: float = 37.7749,
     center_lon: float = -122.4194,
-    seed: int = 42
+    seed: int = 42,
+    preset: str = "urban_mesh"
 ) -> pd.DataFrame:
     """
-    Generate realistic spatial clusters for 50 sensors in an urban area.
+    Generate realistic spatial clusters for IoT sensors in an urban mesh or marine vessel.
     Returns DataFrame with columns: sensor_id, latitude, longitude, altitude, cluster_id, microclimate_offset
     """
     rng = np.random.default_rng(seed)
 
-    # Create 5 distinct urban zones/clusters
+    # 5 distinct zones / compartments
     num_clusters = 5
     cluster_centers_lat = center_lat + rng.uniform(-0.03, 0.03, num_clusters)
     cluster_centers_lon = center_lon + rng.uniform(-0.03, 0.03, num_clusters)
 
     sensors = []
     sensors_per_cluster = num_sensors // num_clusters
+
+    vessel_zones = [
+        "Main_Engine_Block",
+        "Auxiliary_Generators",
+        "Exhaust_Turbocharger",
+        "Hull_Acoustics",
+        "Bridge_Weather_Deck"
+    ]
 
     for c in range(num_clusters):
         c_lat = cluster_centers_lat[c]
@@ -33,12 +42,14 @@ def generate_sensor_network(
         for i in range(count):
             s_idx = len(sensors) + 1
             s_id = f"S{s_idx:03d}"
-            # Scatter within ~400-800 meters of cluster center
+            # Scatter within physical boundaries
             lat = c_lat + rng.normal(0, 0.0035)
             lon = c_lon + rng.normal(0, 0.0035)
             altitude = float(np.clip(rng.normal(25.0, 10.0), 5.0, 150.0))
             # Individual sensor baseline offset
             sensor_offset = float(cluster_microclimate + rng.normal(0.0, 0.3))
+
+            zone_name = vessel_zones[c % len(vessel_zones)] if preset == "vessel_marine" else f"Zone_{c+1}"
 
             sensors.append({
                 "sensor_id": s_id,
@@ -46,7 +57,8 @@ def generate_sensor_network(
                 "longitude": round(float(lon), 6),
                 "altitude": round(altitude, 1),
                 "cluster_id": c,
-                "microclimate_offset": round(sensor_offset, 3)
+                "microclimate_offset": round(sensor_offset, 3),
+                "zone_name": zone_name
             })
 
     return pd.DataFrame(sensors)
@@ -57,7 +69,8 @@ def generate_clean_telemetry(
     duration_hours: int = 24,
     sampling_interval_minutes: int = 5,
     start_time: datetime = datetime(2026, 6, 1, 0, 0, 0, tzinfo=timezone.utc),
-    seed: int = 42
+    seed: int = 42,
+    preset: str = "urban_mesh"
 ) -> pd.DataFrame:
     """
     Generate realistic, physically consistent clean sensor telemetry.
@@ -79,48 +92,77 @@ def generate_clean_telemetry(
         lon = sensor["longitude"]
         offset = sensor["microclimate_offset"]
 
-        # 1. Temperature: Diurnal cycle (peak ~15:00, trough ~05:00) + microclimate offset
-        # Base mean 22°C, daily swing ±7°C
-        diurnal_phase = 2.0 * np.pi * (hours - 9.0) / 24.0
-        clean_temp = (
-            22.0
-            + 7.0 * np.sin(diurnal_phase)
-            + offset
-            + 0.2 * np.sin(4.0 * np.pi * hours / 24.0)
-        )
+        if preset == "vessel_marine":
+            # Marine Vessel Engine & Hull Physical Telemetry Model
+            c_id = sensor.get("cluster_id", 0)
+            diurnal_phase = 2.0 * np.pi * (hours - 9.0) / 24.0
 
-        # 2. Humidity: Inversely correlated with temperature
-        # Range approx 40% to 85%
-        clean_humidity = (
-            65.0
-            - 20.0 * np.sin(diurnal_phase)
-            - 1.5 * offset
-            + 0.5 * np.cos(4.0 * np.pi * hours / 24.0)
-        )
-        clean_humidity = np.clip(clean_humidity, 20.0, 98.0)
+            if c_id == 0:  # Main Engine Block (Cruising duty cycles)
+                clean_temp = 82.0 + 7.0 * np.sin(2.0 * np.pi * hours / 8.0) + offset
+                clean_noise = 88.0 + 8.0 * np.sin(2.0 * np.pi * hours / 8.0) + offset
+                clean_aqi = 45.0 + 20.0 * np.abs(np.sin(2.0 * np.pi * hours / 8.0))
+            elif c_id == 2:  # Exhaust Gas Manifold & Turbocharger
+                clean_temp = 145.0 + 25.0 * np.sin(2.0 * np.pi * hours / 6.0) + offset
+                clean_noise = 96.0 + 5.0 * np.cos(2.0 * np.pi * hours / 6.0) + offset
+                clean_aqi = 65.0 + 35.0 * np.abs(np.sin(2.0 * np.pi * hours / 6.0))
+            elif c_id == 3:  # Hull Acoustics & Propeller Cavitation
+                clean_temp = 20.0 + 4.0 * np.sin(diurnal_phase) + offset
+                clean_noise = 76.0 + 16.0 * np.abs(np.sin(2.0 * np.pi * hours / 4.0)) + offset
+                clean_aqi = 25.0 + 5.0 * np.sin(diurnal_phase)
+            else:  # Auxiliary Generators & Navigation Bridge Deck
+                day_activity = 1.0 / (1.0 + np.exp(-1.5 * (hours - 6.5))) - 1.0 / (1.0 + np.exp(-1.5 * (hours - 22.0)))
+                clean_temp = 23.0 + 5.0 * np.sin(diurnal_phase) + offset
+                clean_noise = 48.0 + 14.0 * day_activity + offset
+                clean_aqi = 32.0 + 12.0 * np.sin(diurnal_phase)
 
-        # 3. Barometric Pressure: Slow synoptic atmospheric variation (1013 hPa baseline)
-        synoptic_wave = 1013.25 + 2.5 * np.sin(2.0 * np.pi * (hours + 3.0) / 36.0) - (sensor["altitude"] * 0.12)
-        clean_pressure = synoptic_wave + 0.1 * np.cos(diurnal_phase)
+            # Marine boundary layer thermodynamic humidity & barometric semi-diurnal tides
+            clean_humidity = np.clip(76.0 - 16.0 * np.sin(diurnal_phase) - offset, 35.0, 98.0)
+            clean_pressure = 1014.25 + 3.2 * np.sin(2.0 * np.pi * (hours + 2.0) / 12.4) - (sensor["altitude"] * 0.12)
+            clean_noise = np.clip(clean_noise, 30.0, 120.0)
+            clean_aqi = np.clip(clean_aqi, 10.0, 300.0)
+        else:
+            # 1. Temperature: Diurnal cycle (peak ~15:00, trough ~05:00) + microclimate offset
+            # Base mean 22°C, daily swing ±7°C
+            diurnal_phase = 2.0 * np.pi * (hours - 9.0) / 24.0
+            clean_temp = (
+                22.0
+                + 7.0 * np.sin(diurnal_phase)
+                + offset
+                + 0.2 * np.sin(4.0 * np.pi * hours / 24.0)
+            )
 
-        # 4. Air Quality (AQI): Peak during morning commute (7-9 AM) and evening rush (17-19 PM)
-        # Baseline ~35 (Good), commuter peaks push up to 85
-        morning_rush = np.exp(-0.5 * ((hours - 8.2) / 1.5) ** 2)
-        evening_rush = np.exp(-0.5 * ((hours - 18.0) / 1.8) ** 2)
-        clean_aqi = (
-            35.0
-            + 35.0 * morning_rush
-            + 40.0 * evening_rush
-            + max(0.0, offset * 2.0)
-            + 2.0 * np.sin(2.0 * np.pi * hours / 24.0)
-        )
-        clean_aqi = np.clip(clean_aqi, 10.0, 300.0)
+            # 2. Humidity: Inversely correlated with temperature
+            # Range approx 40% to 85%
+            clean_humidity = (
+                65.0
+                - 20.0 * np.sin(diurnal_phase)
+                - 1.5 * offset
+                + 0.5 * np.cos(4.0 * np.pi * hours / 24.0)
+            )
+            clean_humidity = np.clip(clean_humidity, 20.0, 98.0)
 
-        # 5. Noise Level (dB): Quiet at night (35-42 dB), high during daytime activities (55-75 dB)
-        day_activity = 1.0 / (1.0 + np.exp(-1.5 * (hours - 6.5))) - 1.0 / (1.0 + np.exp(-1.5 * (hours - 22.0)))
-        traffic_bursts = 10.0 * (morning_rush + evening_rush)
-        clean_noise = 38.0 + 22.0 * day_activity + traffic_bursts + 0.5 * offset
-        clean_noise = np.clip(clean_noise, 30.0, 110.0)
+            # 3. Barometric Pressure: Slow synoptic atmospheric variation (1013 hPa baseline)
+            synoptic_wave = 1013.25 + 2.5 * np.sin(2.0 * np.pi * (hours + 3.0) / 36.0) - (sensor["altitude"] * 0.12)
+            clean_pressure = synoptic_wave + 0.1 * np.cos(diurnal_phase)
+
+            # 4. Air Quality (AQI): Peak during morning commute (7-9 AM) and evening rush (17-19 PM)
+            # Baseline ~35 (Good), commuter peaks push up to 85
+            morning_rush = np.exp(-0.5 * ((hours - 8.2) / 1.5) ** 2)
+            evening_rush = np.exp(-0.5 * ((hours - 18.0) / 1.8) ** 2)
+            clean_aqi = (
+                35.0
+                + 35.0 * morning_rush
+                + 40.0 * evening_rush
+                + max(0.0, offset * 2.0)
+                + 2.0 * np.sin(2.0 * np.pi * hours / 24.0)
+            )
+            clean_aqi = np.clip(clean_aqi, 10.0, 300.0)
+
+            # 5. Noise Level (dB): Quiet at night (35-42 dB), high during daytime activities (55-75 dB)
+            day_activity = 1.0 / (1.0 + np.exp(-1.5 * (hours - 6.5))) - 1.0 / (1.0 + np.exp(-1.5 * (hours - 22.0)))
+            traffic_bursts = 10.0 * (morning_rush + evening_rush)
+            clean_noise = 38.0 + 22.0 * day_activity + traffic_bursts + 0.5 * offset
+            clean_noise = np.clip(clean_noise, 30.0, 110.0)
 
         for i, t in enumerate(timestamps):
             all_rows.append({

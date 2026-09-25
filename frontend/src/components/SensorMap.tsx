@@ -42,23 +42,23 @@ export const SensorMap: React.FC<SensorMapProps> = ({
 
   return (
     <div className="card" style={{ padding: 18 }}>
-      <div className="card-header" style={{ marginBottom: 10 }}>
+      <div className="card-header map-card-header">
         <div className="card-title">
           <MapPinIcon size={16} />
-          <span>Spatial Sensor Network Map (50 IoT Stations)</span>
+          <span>Spatial Sensor Network Map ({sensors.length} Stations)</span>
         </div>
-        <div style={{ display: "flex", gap: 14, fontSize: 11 }}>
+        <div className="map-legend">
           <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
             <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#10b981" }}></span>
             <span>Normal</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
             <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#f59e0b" }}></span>
-            <span>Warning (&gt;0 anom)</span>
+            <span>Warning (&gt;0)</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
             <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#ef4444" }}></span>
-            <span>High Anomaly (&gt;15 anom)</span>
+            <span>High Anomaly (&gt;15)</span>
           </div>
         </div>
       </div>
@@ -85,6 +85,8 @@ export const SensorMap: React.FC<SensorMapProps> = ({
                 onClick={() => onSelectSensor(s.sensor_id)}
                 style={{ cursor: "pointer" }}
               >
+                {/* Large touch area for mobile tap */}
+                <circle cx={cx} cy={cy} r={18} fill="transparent" />
                 {isSelected && (
                   <circle cx={cx} cy={cy} r={12} fill="none" stroke="#2563eb" strokeWidth={2.5} strokeDasharray="3 3" />
                 )}

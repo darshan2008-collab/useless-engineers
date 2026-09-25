@@ -108,6 +108,7 @@ export interface SimulationConfig {
     drift: number;
     missing: number;
   };
+  preset?: string;
 }
 
 export interface SimulationMetadata {

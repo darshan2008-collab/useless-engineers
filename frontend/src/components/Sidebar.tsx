@@ -12,7 +12,9 @@ import {
   UploadIcon,
   DownloadIcon,
   CheckCircleIcon,
-  SlidersIcon
+  SlidersIcon,
+  QSenseEmblem,
+  UserIcon
 } from "./Icons";
 
 export type DashboardView =
@@ -22,7 +24,8 @@ export type DashboardView =
   | "spatial"
   | "anomalies"
   | "quantum"
-  | "pipeline";
+  | "pipeline"
+  | "login";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -113,7 +116,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="sidebar-header">
           <div className="sidebar-brand-lockup">
             <div className="sidebar-logo-icon">
-              <CpuIcon size={18} />
+              <QSenseEmblem size={20} />
             </div>
             <div>
               <div className="sidebar-title">Q-SENSE ENGINE</div>
@@ -194,7 +197,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {hasRun && (
             <button
               className="btn btn-outline"
-              style={{ width: "100%", justifyContent: "center", height: 38 }}
+              style={{ width: "100%", justifyContent: "center", marginBottom: 8, height: 38 }}
               onClick={() => {
                 onOpenBenchmark();
                 onClose();
@@ -204,6 +207,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <span>Benchmark</span>
             </button>
           )}
+
+          <button
+            className="btn btn-outline"
+            style={{ width: "100%", justifyContent: "center", height: 38, borderColor: "#bfdbfe", background: "#f0f7ff", color: "#1d4ed8" }}
+            onClick={() => {
+              onSelectView("login");
+              onClose();
+            }}
+            title="Open Q-SENSE Portal Login"
+          >
+            <UserIcon size={14} />
+            <span>Telemetry Portal Login</span>
+          </button>
         </div>
       </aside>
     </>
