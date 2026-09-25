@@ -9,7 +9,20 @@ import type {
   SimulationMetadata
 } from "./types";
 
-const API_BASE = "http://127.0.0.1:8000/api";
+import { Capacitor } from "@capacitor/core";
+
+const getApiBase = (): string => {
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem("qsense_api_base");
+    if (saved) return saved;
+    if (Capacitor.isNativePlatform()) {
+      return "http://10.0.2.2:8000/api";
+    }
+  }
+  return "http://127.0.0.1:8000/api";
+};
+
+const API_BASE = getApiBase();
 
 export async function uploadDataset(file: File): Promise<ApiResponse<any>> {
   const formData = new FormData();

@@ -1,0 +1,9 @@
+{
+  "appId": "com.qsense.app",
+  "appName": "Q-SENSE",
+  "webDir": "dist",
+  "server": {
+    "url": "https://useless-engineers.vercel.app",
+    "cleartext": true
+  }
+}

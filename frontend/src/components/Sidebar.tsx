@@ -7,14 +7,8 @@ import {
   AlertTriangleIcon,
   CpuIcon,
   LayersIcon,
-  BarChartIcon,
-  PlayIcon,
-  UploadIcon,
-  DownloadIcon,
-  CheckCircleIcon,
   SlidersIcon,
   QSenseEmblem,
-  UserIcon
 } from "./Icons";
 
 export type DashboardView =
@@ -32,13 +26,13 @@ interface SidebarProps {
   onClose: () => void;
   activeView: DashboardView;
   onSelectView: (view: DashboardView) => void;
-  onRunDemo: () => void;
-  onOpenUpload: () => void;
-  onOpenBenchmark: () => void;
-  isLoading: boolean;
-  hasRun: boolean;
-  runId: string | null;
-  datasetName: string;
+  onRunDemo?: () => void;
+  onOpenUpload?: () => void;
+  onOpenBenchmark?: () => void;
+  isLoading?: boolean;
+  hasRun?: boolean;
+  runId?: string | null;
+  datasetName?: string;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -46,13 +40,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onClose,
   activeView,
   onSelectView,
-  onRunDemo,
-  onOpenUpload,
-  onOpenBenchmark,
-  isLoading,
-  hasRun,
-  runId,
-  datasetName,
 }) => {
   const menuItems: Array<{ id: DashboardView; label: string; desc: string; icon: React.ReactNode }> = [
     {
@@ -160,66 +147,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </button>
             );
           })}
-        </div>
-
-        {/* Action Shortcuts Section */}
-        <div className="sidebar-footer">
-          <div className="sidebar-footer-title">
-            Engine Operations
-          </div>
-
-          <button
-            className="btn btn-primary"
-            style={{ width: "100%", justifyContent: "center", marginBottom: 8, height: 38 }}
-            onClick={() => {
-              onRunDemo();
-              onClose();
-            }}
-            disabled={isLoading}
-          >
-            <PlayIcon size={14} />
-            <span>{isLoading ? "Running..." : "Run Official Demo"}</span>
-          </button>
-
-          <button
-            className="btn btn-outline"
-            style={{ width: "100%", justifyContent: "center", marginBottom: 8, height: 38 }}
-            onClick={() => {
-              onOpenUpload();
-              onClose();
-            }}
-            disabled={isLoading}
-          >
-            <UploadIcon size={14} />
-            <span>Upload CSV</span>
-          </button>
-
-          {hasRun && (
-            <button
-              className="btn btn-outline"
-              style={{ width: "100%", justifyContent: "center", marginBottom: 8, height: 38 }}
-              onClick={() => {
-                onOpenBenchmark();
-                onClose();
-              }}
-            >
-              <BarChartIcon size={14} />
-              <span>Benchmark</span>
-            </button>
-          )}
-
-          <button
-            className="btn btn-outline"
-            style={{ width: "100%", justifyContent: "center", height: 38, borderColor: "#bfdbfe", background: "#f0f7ff", color: "#1d4ed8" }}
-            onClick={() => {
-              onSelectView("login");
-              onClose();
-            }}
-            title="Open Q-SENSE Portal Login"
-          >
-            <UserIcon size={14} />
-            <span>Telemetry Portal Login</span>
-          </button>
         </div>
       </aside>
     </>
