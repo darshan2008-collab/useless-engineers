@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: qsense-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: qsense_db
+      POSTGRES_USER: qsense_user
+      POSTGRES_PASSWORD: qsense_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - qsense_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U qsense_user -d qsense_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: qsense-backend
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://qsense_user:qsense_password@db:5432/qsense_db
+      SPATIAL_RADIUS_METERS: 500.0
+      TEMPORAL_WINDOW: 5
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: qsense-frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+volumes:
+  qsense_pgdata:

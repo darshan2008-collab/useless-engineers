@@ -1,0 +1,39 @@
+{
+  "random_seed": 42,
+  "number_of_sensors": 50,
+  "duration_hours": 24,
+  "sampling_interval_minutes": 5,
+  "total_rows": 14400,
+  "noise_configuration": {
+    "gaussian": 0.05,
+    "spike": 0.015,
+    "outlier": 0.01,
+    "drift": 0.02,
+    "missing": 0.015
+  },
+  "feature_configuration": [
+    "temperature",
+    "humidity",
+    "pressure",
+    "air_quality",
+    "noise_level"
+  ],
+  "dataset_version": "1.0.0",
+  "generation_timestamp": "2026-09-25T14:41:55.682470+00:00",
+  "quality_report": {
+    "status": "PASSED",
+    "total_rows": 14400,
+    "total_sensors": 50,
+    "corrupted_labels_count": 9310,
+    "missing_values_count": 1103,
+    "noise_types_present": [
+      "DRIFT",
+      "GAUSSIAN_NOISE",
+      "MISSING",
+      "NORMAL",
+      "OUTLIER",
+      "SPATIAL_ANOMALY",
+      "SPIKE"
+    ]
+  }
+}
