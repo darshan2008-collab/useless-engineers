@@ -90,9 +90,9 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Right: Actions */}
         <div className="header-actions">
           {activeDatasetName && (
-            <div className="dataset-indicator" title={`Active: ${activeDatasetName}`}>
+            <div className="dataset-indicator hide-on-mobile" title={`Active: ${activeDatasetName}`}>
               <span className="live-dot"></span>
-              <span className="dataset-label hide-on-mobile">
+              <span className="dataset-label">
                 {activeDatasetName.split(" ")[0]}
               </span>
             </div>
@@ -135,8 +135,8 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => onSelectView(activeView === "login" ? "all" : "login")}
             title="Q-SENSE Security Access Portal"
           >
-            <UserIcon size={13} />
-            <span className="user-pill-text">{currentUser ? (currentUser.length > 10 ? currentUser.slice(0, 8) + ".." : currentUser) : "Login"}</span>
+            <UserIcon size={14} />
+            <span className="user-pill-text hide-on-mobile">{currentUser || "Login"}</span>
           </button>
         </div>
       </div>

@@ -7,7 +7,7 @@ import {
   QSenseEmblem,
   CheckCircleIcon,
   AlertTriangleIcon,
-  PlayIcon
+  PlayIcon,
 } from "./Icons";
 
 interface LoginPageProps {
@@ -30,22 +30,26 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onCancel }
     setSuccessMsg(null);
 
     if (!username.trim()) {
-      setErrorMsg("Please enter your telemetry username or station ID.");
+      setErrorMsg("Please enter your username or station ID.");
       return;
     }
     if (!password.trim()) {
-      setErrorMsg("Please enter your security access key / password.");
+      setErrorMsg("Please enter your password / security key.");
       return;
     }
 
     setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
-      setSuccessMsg(isSignUp ? "Account registered successfully! Connecting..." : "Authentication verified! Access granted.");
+      setSuccessMsg(
+        isSignUp
+          ? "Account created successfully! Connecting..."
+          : "Authentication verified! Access granted."
+      );
       setTimeout(() => {
         onLoginSuccess(username.trim());
-      }, 700);
-    }, 500);
+      }, 500);
+    }, 400);
   };
 
   const handleQuickDemo = () => {
@@ -54,142 +58,183 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onCancel }
     setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
-      setSuccessMsg("Demo engineer session initialized. Access granted.");
+      setSuccessMsg("Demo engineer session initialized.");
       setTimeout(() => {
         onLoginSuccess("lead_quantum_analyst");
-      }, 600);
-    }, 400);
+      }, 450);
+    }, 300);
   };
 
   const handleForgotPassword = (e: React.MouseEvent) => {
     e.preventDefault();
-    alert("Q-SENSE Security Notice:\nTo reset your cryptographic station key, contact your local network telemetry administrator or use the demo login.");
+    alert(
+      "Q-SENSE Security Notice:\nTo reset your station credentials, contact your telemetry administrator or use the 1-Click Demo Login."
+    );
   };
 
   return (
-    <div className="login-page-container">
-      {/* Centered Login Card using Uiverse structure by Praashoo7 themed to Q-SENSE */}
-      <form className="form login-form" onSubmit={handleSubmit}>
-        {/* Brand Lockup inside Card */}
-        <div className="login-brand-header">
-          <div className="login-emblem-badge">
-            <QSenseEmblem size={20} />
+    <div className="simple-login-container">
+      {/* Background Soft Glow */}
+      <div className="login-ambient-glow" />
+
+      {/* Perfectly Centered Single Card */}
+      <div className="simple-login-card">
+        {/* Brand Header */}
+        <div className="simple-login-header">
+          <div className="simple-logo-badge">
+            <QSenseEmblem size={24} />
           </div>
-          <p id="heading">{isSignUp ? "Create Q-SENSE ID" : "Sign In to Q-SENSE"}</p>
-          <div className="login-subheading">
+          <h1 className="simple-login-title">
+            {isSignUp ? "Create Account" : "Sign In to Q-SENSE"}
+          </h1>
+          <p className="simple-login-subtitle">
             Urban IoT Quantum Telemetry Engine
-          </div>
+          </p>
         </div>
 
-        {/* Feedback Alerts */}
+        {/* Tab Switcher */}
+        <div className="simple-tab-switcher">
+          <button
+            type="button"
+            className={`simple-tab-btn ${!isSignUp ? "active" : ""}`}
+            onClick={() => {
+              setIsSignUp(false);
+              setErrorMsg(null);
+            }}
+          >
+            Sign In
+          </button>
+          <button
+            type="button"
+            className={`simple-tab-btn ${isSignUp ? "active" : ""}`}
+            onClick={() => {
+              setIsSignUp(true);
+              setErrorMsg(null);
+            }}
+          >
+            Sign Up
+          </button>
+        </div>
+
+        {/* Alerts */}
         {errorMsg && (
-          <div className="login-alert alert-error">
-            <AlertTriangleIcon size={13} />
+          <div className="simple-login-alert alert-error">
+            <AlertTriangleIcon size={15} />
             <span>{errorMsg}</span>
           </div>
         )}
         {successMsg && (
-          <div className="login-alert alert-success">
-            <CheckCircleIcon size={13} />
+          <div className="simple-login-alert alert-success">
+            <CheckCircleIcon size={15} />
             <span>{successMsg}</span>
           </div>
         )}
 
-        {/* Field 1: Username / Station ID */}
-        <div className="field input">
-          <span className="input-icon">
-            <UserIcon size={15} />
-          </span>
-          <input
-            type="text"
-            className="input-field"
-            placeholder="Username / Station ID"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            autoComplete="username"
-            disabled={isSubmitting}
-          />
-        </div>
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="simple-login-form">
+          {/* Username */}
+          <div className="simple-field-group">
+            <label className="simple-field-label">Username / Station ID</label>
+            <div className="simple-input-box">
+              <span className="simple-input-icon">
+                <UserIcon size={16} />
+              </span>
+              <input
+                type="text"
+                className="simple-input"
+                placeholder="e.g. telemetry_engineer"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                autoComplete="username"
+                disabled={isSubmitting}
+              />
+            </div>
+          </div>
 
-        {/* Field 2: Security Key / Password */}
-        <div className="field input">
-          <span className="input-icon">
-            <LockIcon size={15} />
-          </span>
-          <input
-            type={showPassword ? "text" : "password"}
-            className="input-field"
-            placeholder="Security Key / Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-            disabled={isSubmitting}
-          />
-          <button
-            type="button"
-            className="password-toggle-btn"
-            onClick={() => setShowPassword(!showPassword)}
-            title={showPassword ? "Hide password" : "Show password"}
-            tabIndex={-1}
-          >
-            {showPassword ? <EyeOffIcon size={14} /> : <EyeIcon size={14} />}
-          </button>
-        </div>
+          {/* Password */}
+          <div className="simple-field-group">
+            <div className="simple-label-row">
+              <label className="simple-field-label">Password / Security Key</label>
+              {!isSignUp && (
+                <button
+                  type="button"
+                  className="simple-forgot-link"
+                  onClick={handleForgotPassword}
+                >
+                  Forgot?
+                </button>
+              )}
+            </div>
+            <div className="simple-input-box">
+              <span className="simple-input-icon">
+                <LockIcon size={16} />
+              </span>
+              <input
+                type={showPassword ? "text" : "password"}
+                className="simple-input"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+                disabled={isSubmitting}
+              />
+              <button
+                type="button"
+                className="simple-eye-btn"
+                onClick={() => setShowPassword(!showPassword)}
+                title={showPassword ? "Hide password" : "Show password"}
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOffIcon size={15} /> : <EyeIcon size={15} />}
+              </button>
+            </div>
+          </div>
 
-        {/* Action Buttons Row */}
-        <div className="btn">
+          {/* Submit Button */}
           <button
             type="submit"
-            className="button1"
+            className="simple-submit-btn"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Verifying..." : isSignUp ? "Register" : "Login"}
+            {isSubmitting
+              ? "Verifying..."
+              : isSignUp
+              ? "Create Account"
+              : "Sign In"}
           </button>
+
+          {/* Divider */}
+          <div className="simple-divider">
+            <span>or</span>
+          </div>
+
+          {/* Quick Demo Button */}
           <button
             type="button"
-            className="button2"
-            onClick={() => {
-              setIsSignUp(!isSignUp);
-              setErrorMsg(null);
-            }}
+            className="simple-demo-btn"
+            onClick={handleQuickDemo}
             disabled={isSubmitting}
           >
-            {isSignUp ? "Sign In Instead" : "Sign Up"}
+            <PlayIcon size={13} />
+            <span>Quick 1-Click Demo Login</span>
           </button>
-        </div>
 
-        {/* Quick Demo Access Bar */}
-        <button
-          type="button"
-          className="button-demo-quick"
-          onClick={handleQuickDemo}
-          disabled={isSubmitting}
-          title="Instant access with preconfigured demo session"
-        >
-          <PlayIcon size={12} />
-          <span>Quick 1-Click Demo Login</span>
-        </button>
-
-        {/* Forgot Password Button */}
-        <button
-          type="button"
-          className="button3"
-          onClick={handleForgotPassword}
-        >
-          Forgot Password?
-        </button>
-
-        {onCancel && (
-          <button
-            type="button"
-            className="button-back-dashboard"
-            onClick={onCancel}
-          >
-            ← Back to Dashboard
-          </button>
-        )}
-      </form>
+          {/* Return to Dashboard */}
+          {onCancel && (
+            <div style={{ textAlign: "center", marginTop: 4 }}>
+              <button
+                type="button"
+                className="simple-back-btn"
+                onClick={onCancel}
+              >
+                ← Back to Dashboard
+              </button>
+            </div>
+          )}
+        </form>
+      </div>
     </div>
   );
 };
+
 export default LoginPage;
