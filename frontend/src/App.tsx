@@ -212,6 +212,11 @@ export const App: React.FC = () => {
     handleRunOfficialDemo();
   }, []);
 
+  // Reset scroll position to top whenever active tab changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [activeView]);
+
   if (activeView === "login") {
     return (
       <LoginPage

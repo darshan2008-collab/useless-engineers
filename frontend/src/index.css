@@ -103,7 +103,7 @@ body::before {
   background: transparent;
   width: 100%;
   max-width: 100vw;
-  overflow-x: hidden;
+  overflow-x: clip;
   position: relative;
 }
 
@@ -2043,30 +2043,167 @@ body::before {
     gap: 8px !important;
   }
 
-  /* Simulation Studio */
+  /* General Card Protection: Never exceed screen width or blow out on mobile */
+  .card {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  /* Simulation Studio Mobile Alignment */
   .studio-header-card {
-    padding: 16px 14px !important;
+    padding: 12px 14px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .studio-header-flex {
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .studio-header-main {
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .studio-icon-badge {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+  }
+
+  .studio-title {
+    font-size: 15.5px !important;
+    line-height: 1.25 !important;
+  }
+
+  .studio-desc {
+    font-size: 11.5px !important;
+    line-height: 1.35 !important;
+    margin-top: 3px !important;
+  }
+
+  .preset-selector-wrapper {
+    width: 100% !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    margin-top: 4px !important;
+  }
+
+  .preset-label {
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  .preset-button-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+
+  .preset-btn {
+    width: 100% !important;
+    padding: 7px 6px !important;
+    font-size: 11px !important;
+    justify-content: center !important;
+    text-align: center !important;
+    height: auto !important;
+    min-height: 34px !important;
+    white-space: normal !important;
+    line-height: 1.2 !important;
   }
 
   .studio-grid {
     grid-template-columns: 1fr !important;
     gap: 14px !important;
+    width: 100% !important;
   }
 
   .studio-card {
-    padding: 16px 14px !important;
-  }
-
-  .preset-button-group {
+    padding: 14px 12px !important;
     width: 100% !important;
-    margin-top: 8px !important;
+    box-sizing: border-box !important;
   }
 
-  .preset-button-group .btn {
-    flex: 1 1 calc(50% - 6px) !important;
-    text-align: center !important;
-    font-size: 11.5px !important;
-    padding: 6px 8px !important;
+  .studio-card-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    padding-bottom: 10px !important;
+    margin-bottom: 12px !important;
+    width: 100% !important;
+  }
+
+  .studio-card-header h3 {
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+  }
+
+  /* Form Label Rows on Mobile: Never clip badges or overflow cards */
+  .form-label-row {
+    flex-wrap: wrap !important;
+    gap: 4px 8px !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .form-label-row label {
+    font-size: 12.5px !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    word-break: break-word !important;
+    line-height: 1.3 !important;
+  }
+
+  .form-val-badge {
+    font-size: 11px !important;
+    padding: 2px 7px !important;
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  /* Seed Row on Mobile */
+  .seed-input-row {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .seed-input {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    height: 38px !important;
+  }
+
+  .seed-btn-group {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .seed-btn {
+    width: 100% !important;
+    height: 36px !important;
+    justify-content: center !important;
+    font-size: 12px !important;
+  }
+
+  /* Slider Ticks */
+  .slider-ticks {
+    padding: 0 4px !important;
+    font-size: 10px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
   }
 
   .matrix-stat-row {
@@ -2076,11 +2213,35 @@ body::before {
 
   .button-toggle-grid {
     grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  .toggle-option-btn {
+    font-size: 11.5px !important;
+    padding: 8px 6px !important;
+    line-height: 1.25 !important;
+    text-align: center !important;
   }
 
   .studio-action-card,
   .studio-audit-card {
-    padding: 16px 14px !important;
+    padding: 14px 12px !important;
+  }
+
+  .studio-action-btn-row {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .studio-action-btn {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 42px !important;
+    justify-content: center !important;
+    font-size: 13px !important;
   }
 
   .audit-metrics-grid {
@@ -2194,10 +2355,120 @@ body::before {
   flex-shrink: 0;
 }
 
-.preset-button-group {
+.studio-header-flex {
   display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  width: 100%;
+}
+
+.studio-header-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.studio-header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.studio-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.studio-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.studio-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.studio-desc {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.45;
+}
+
+.preset-selector-wrapper {
+  display: flex;
+  align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+}
+
+.preset-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.preset-button-grid {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.preset-btn {
+  font-size: 12px;
+  padding: 6px 10px;
+  white-space: nowrap;
+}
+
+.preset-stress-btn {
+  color: #b91c1c !important;
+  border-color: #fecaca !important;
+}
+
+.preset-stress-btn:hover {
+  background: #fef2f2 !important;
+  border-color: #fca5a5 !important;
+}
+
+.seed-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+.seed-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.seed-btn-group {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.studio-action-btn-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.studio-action-btn {
+  min-width: 200px;
+  justify-content: center;
 }
 
 .studio-grid {

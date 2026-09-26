@@ -183,69 +183,72 @@ export const SimulationStudio: React.FC<SimulationStudioProps> = ({
     <div className="simulation-studio-container">
       {/* Studio Header Card */}
       <div className="card studio-header-card">
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <div className="studio-header-flex">
+          <div className="studio-header-main">
             <div className="studio-icon-badge">
-              <SlidersIcon size={24} />
+              <SlidersIcon size={22} />
             </div>
-            <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-                <h2 style={{ fontSize: 20, fontWeight: 700, color: "#0f172a", margin: 0 }}>
-                  Deterministic Simulation Telemetry Studio
+            <div className="studio-header-text">
+              <div className="studio-title-row">
+                <h2 className="studio-title">
+                  Deterministic Simulation Studio
                 </h2>
-                <span className="badge badge-normal" style={{ fontSize: 11 }}>
-                  Section 40 & 31 Verified
-                </span>
-                {metadata && (
-                  <span className="badge badge-quantum" style={{ fontSize: 11 }}>
-                    Active Seed: {metadata.random_seed}
+                <div className="studio-badges">
+                  <span className="badge badge-normal" style={{ fontSize: 11 }}>
+                    Section 40 & 31 Verified
                   </span>
-                )}
+                  {metadata && (
+                    <span className="badge badge-quantum" style={{ fontSize: 11 }}>
+                      Seed: {metadata.random_seed}
+                    </span>
+                  )}
+                </div>
               </div>
-              <p style={{ margin: "4px 0 0 0", fontSize: 13, color: "#64748b" }}>
-                Synthesize reproducible urban IoT sensor meshes with pristine diurnal physics and calibrated stochastic noise injections.
+              <p className="studio-desc">
+                Synthesize reproducible urban IoT sensor meshes with diurnal physics and calibrated noise injections.
               </p>
             </div>
           </div>
 
           {/* Quick Preset Selector Buttons */}
-          <div className="preset-button-group">
-            <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", alignSelf: "center", marginRight: 4 }}>
+          <div className="preset-selector-wrapper">
+            <span className="preset-label">
               Presets:
             </span>
-            <button
-              className="btn btn-outline btn-sm"
-              onClick={() => applyPreset("standard")}
-              disabled={isBusy}
-              title="Official 50 Sensors, 24 Hours, 5 min interval, Seed 42"
-            >
-              Standard Urban (50s / 24h)
-            </button>
-            <button
-              className="btn btn-outline btn-sm"
-              onClick={() => applyPreset("dense")}
-              disabled={isBusy}
-              title="Dense 80-station urban deployment"
-            >
-              Dense Mesh (80s / 12h)
-            </button>
-            <button
-              className="btn btn-outline btn-sm"
-              onClick={() => applyPreset("fast")}
-              disabled={isBusy}
-              title="Fast lightweight run for rapid test iterations"
-            >
-              Rapid Test (20s / 6h)
-            </button>
-            <button
-              className="btn btn-outline btn-sm"
-              onClick={() => applyPreset("stress")}
-              disabled={isBusy}
-              style={{ color: "#b91c1c", borderColor: "#fecaca" }}
-              title="Heavy Glitches & Multi-Channel Drift"
-            >
-              Heavy Stress Test
-            </button>
+            <div className="preset-button-grid">
+              <button
+                className="btn btn-outline btn-sm preset-btn"
+                onClick={() => applyPreset("standard")}
+                disabled={isBusy}
+                title="Official 50 Sensors, 24 Hours, 5 min interval, Seed 42"
+              >
+                Standard (50s/24h)
+              </button>
+              <button
+                className="btn btn-outline btn-sm preset-btn"
+                onClick={() => applyPreset("dense")}
+                disabled={isBusy}
+                title="Dense 80-station urban deployment"
+              >
+                Dense (80s/12h)
+              </button>
+              <button
+                className="btn btn-outline btn-sm preset-btn"
+                onClick={() => applyPreset("fast")}
+                disabled={isBusy}
+                title="Fast lightweight run for rapid test iterations"
+              >
+                Rapid (20s/6h)
+              </button>
+              <button
+                className="btn btn-outline btn-sm preset-btn preset-stress-btn"
+                onClick={() => applyPreset("stress")}
+                disabled={isBusy}
+                title="Heavy Glitches & Multi-Channel Drift"
+              >
+                Heavy Stress
+              </button>
+            </div>
           </div>
         </div>
 
@@ -361,31 +364,32 @@ export const SimulationStudio: React.FC<SimulationStudioProps> = ({
                 <label>Deterministic Random Seed</label>
                 <span className="form-val-badge">Seed #{randomSeed}</span>
               </div>
-              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <div className="seed-input-row">
                 <input
                   type="number"
                   value={randomSeed}
                   onChange={(e) => setRandomSeed(parseInt(e.target.value) || 0)}
                   disabled={isBusy}
-                  className="input-text-field"
-                  style={{ flex: 1 }}
+                  className="input-text-field seed-input"
                 />
-                <button
-                  type="button"
-                  className="btn btn-outline btn-sm"
-                  onClick={() => setRandomSeed(42)}
-                  disabled={isBusy}
-                >
-                  Reset (42)
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-outline btn-sm"
-                  onClick={() => setRandomSeed(Math.floor(Math.random() * 9000) + 100)}
-                  disabled={isBusy}
-                >
-                  Randomize
-                </button>
+                <div className="seed-btn-group">
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-sm seed-btn"
+                    onClick={() => setRandomSeed(42)}
+                    disabled={isBusy}
+                  >
+                    Reset (42)
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-sm seed-btn"
+                    onClick={() => setRandomSeed(Math.floor(Math.random() * 9000) + 100)}
+                    disabled={isBusy}
+                  >
+                    Randomize
+                  </button>
+                </div>
               </div>
               <p className="form-help">
                 Fixed seeds guarantee identical reproducible datasets across both judges' machines and test suites.
@@ -580,12 +584,11 @@ export const SimulationStudio: React.FC<SimulationStudioProps> = ({
             </div>
           </div>
 
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          <div className="studio-action-btn-row">
             <button
-              className="btn btn-primary"
+              className="btn btn-primary studio-action-btn"
               onClick={handleGenerate}
               disabled={isBusy}
-              style={{ minWidth: 200, justifyContent: "center" }}
             >
               {isGenerating ? (
                 <>
@@ -602,10 +605,9 @@ export const SimulationStudio: React.FC<SimulationStudioProps> = ({
 
             {activeDatasetId && (
               <button
-                className="btn btn-success"
+                className="btn btn-success studio-action-btn"
                 onClick={() => onRunPipeline(activeDatasetId)}
                 disabled={isBusy}
-                style={{ minWidth: 210, justifyContent: "center" }}
                 title="Immediately run 10-step quantum-assisted denoising on this newly generated dataset"
               >
                 {isParentLoading ? (
